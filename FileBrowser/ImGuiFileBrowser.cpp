@@ -113,7 +113,31 @@ namespace imgui_addons
         ImGui::CloseCurrentPopup();
     }
 
-    bool ImGuiFileBrowser::showFileDialog(const std::string& label, const DialogMode mode, const ImVec2& sz_xy, const std::string& valid_types)
+	void ImGuiFileBrowser::setCurrentDir(std::string path)
+	{
+        current_dirlist.clear();
+        current_path = path;
+		std::replace( current_path.begin(), current_path.end(), '\\', '/' );
+		struct stat s;
+		stat( current_path.c_str(), &s );
+		if(!S_ISDIR(s.st_mode))
+			{
+				if(current_path.find_last_of("/")==std::string::npos)
+				{
+					// It is not a directory and does not end with "/"
+					// this means it may be a drive letter without a "/" at the end or the root
+					current_path = "./";
+					return;
+				}else
+				{
+					current_path = current_path.substr(0, current_path.find_last_of("/"));
+				}
+			}
+        //Reset nav tabs
+        parsePathTabs( current_path );
+	}
+
+	bool ImGuiFileBrowser::showFileDialog(const std::string& label, const DialogMode mode, const ImVec2& sz_xy, const std::string& valid_types)
     {
 
         dialog_mode = mode;

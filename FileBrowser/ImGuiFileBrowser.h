@@ -33,6 +33,11 @@ namespace imgui_addons
             std::string selected_path;
             std::string ext;    // Store the saved file extension
 
+			/**
+			 * Set the Current Directory of the FileBrowser and navigate to that folder if exists.
+			 */
+			void setCurrentDir(std::string path);
+
 
         private:
             struct Info
