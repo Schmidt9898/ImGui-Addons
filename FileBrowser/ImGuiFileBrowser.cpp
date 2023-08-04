@@ -118,6 +118,17 @@ namespace imgui_addons
         current_dirlist.clear();
         current_path = path;
 		std::replace( current_path.begin(), current_path.end(), '\\', '/' );
+		
+		DIR* dir;
+		dir = opendir(current_path.c_str());
+		if(dir != nullptr)
+		{
+            const wchar_t* absolute_path = dir->wdirp->patt;
+            std::string current_directory = wStringToString(absolute_path);
+            std::replace(current_directory.begin(), current_directory.end(), '\\', '/');
+		}
+		closedir (dir);
+		
 		struct stat s;
 		stat( current_path.c_str(), &s );
 		if(!S_ISDIR(s.st_mode))
